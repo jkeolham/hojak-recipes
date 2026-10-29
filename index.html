@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>집밥 레시피 노트</title>
+<meta name="description" content="직접 잡은 한치·벤자리·오징어로 만든 집밥 레시피 모음">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@700&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --paper:#eef0e4; --paper-2:#e3e6d6; --card:#fbfaf3; --line:#c9d0bd;
+    --ink:#263029; --ink-dim:#5c6b5e;
+    --chili:#b23b2a; --chili-dim:#923022; --sea:#3f7a73;
+    --shadow:0 18px 44px -20px rgba(38,48,41,.35);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#1a211c; --paper-2:#202820; --card:#222b23; --line:#34402f;
+      --ink:#e9ecd9; --ink-dim:#9db098;
+      --chili:#e06249; --chili-dim:#c94d33; --sea:#6fc2b6;
+      --shadow:0 18px 44px -20px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#1a211c; --paper-2:#202820; --card:#222b23; --line:#34402f;
+    --ink:#e9ecd9; --ink-dim:#9db098;
+    --chili:#e06249; --chili-dim:#c94d33; --sea:#6fc2b6;
+    --shadow:0 18px 44px -20px rgba(0,0,0,.6);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:'Noto Sans KR',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .disp{font-family:'Gaegu',cursive;}
+  .num{font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums;}
+  h1,h2,h3{text-wrap:balance;}
+
+  .wrap{max-width:980px; margin:0 auto; padding:34px 20px 90px;}
+
+  .masthead{margin-bottom:26px;}
+  .masthead .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--sea); font-weight:500;
+  }
+  .masthead h1{font-size:40px; margin:4px 0 6px; font-weight:700;}
+  .masthead .sub{color:var(--ink-dim); font-size:15px; line-height:1.6; max-width:52ch;}
+
+  .grid{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+    gap:18px; margin-top:28px;
+  }
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    overflow:hidden; cursor:pointer; text-align:left; padding:0; color:inherit;
+    font:inherit; display:flex; flex-direction:column; box-shadow:var(--shadow);
+    transition:transform .15s ease;
+  }
+  .card:hover{transform:translateY(-3px);}
+  .card:focus-visible{outline:2px solid var(--chili); outline-offset:2px;}
+  .card .photo{width:100%; aspect-ratio:4/3; object-fit:cover; display:block; background:var(--paper-2);}
+  .card .body{padding:14px 15px 16px; display:flex; flex-direction:column; gap:6px; flex:1;}
+  .card .top{display:flex; align-items:baseline; justify-content:space-between; gap:8px;}
+  .card .name{font-family:'Gaegu',cursive; font-size:21px; font-weight:700;}
+  .card .cat{font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--sea); background:color-mix(in srgb, var(--sea) 14%, transparent); border-radius:20px; padding:2px 9px; white-space:nowrap;}
+  .card .teaser{font-size:12.5px; color:var(--ink-dim); line-height:1.5;}
+  .card .meta{margin-top:auto; padding-top:8px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-dim); display:flex; justify-content:space-between; border-top:1px dashed var(--line);}
+  .card .caught{color:var(--chili);}
+
+  .scrim{position:fixed; inset:0; background:rgba(20,24,18,.55); backdrop-filter:blur(2px); opacity:0; pointer-events:none; transition:opacity .22s ease; z-index:40;}
+  .scrim.open{opacity:1; pointer-events:auto;}
+
+  .panel{position:fixed; z-index:41; background:var(--card); box-shadow:var(--shadow); overflow-y:auto; right:0; top:0; bottom:0; width:min(520px,100%); transform:translateX(100%); transition:transform .26s cubic-bezier(.3,.8,.4,1); border-left:1px solid var(--line);}
+  .panel.open{transform:translateX(0);}
+  @media (max-width:640px){
+    .panel{right:0; left:0; top:auto; width:auto; max-height:90vh; border-radius:18px 18px 0 0; border-left:none; border-top:1px solid var(--line); transform:translateY(100%);}
+    .panel.open{transform:translateY(0);}
+  }
+
+  .panel-photo{width:100%; aspect-ratio:16/10; object-fit:cover; display:block;}
+  .panel-head{position:sticky; top:0; background:var(--card); padding:16px 22px 12px; display:flex; justify-content:space-between; align-items:flex-start; gap:10px; border-bottom:1px solid var(--line);}
+  .panel-head h2{font-family:'Gaegu',cursive; font-size:28px; font-weight:700; margin:0;}
+  .panel-head .pd-cat{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--sea); letter-spacing:.05em; margin-top:2px;}
+  .panel-close{background:var(--paper-2); border:1px solid var(--line); color:var(--ink); width:30px; height:30px; border-radius:50%; cursor:pointer; font-size:15px; flex:none; display:flex; align-items:center; justify-content:center;}
+  .panel-close:hover{background:var(--line);}
+
+  .panel-body{padding:18px 22px 30px;}
+  .meta-row{display:flex; gap:14px; flex-wrap:wrap; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--ink-dim); margin-bottom:16px;}
+  .meta-row span b{color:var(--ink); font-weight:600;}
+
+  .caught-badge{display:inline-flex; align-items:center; gap:6px; font-size:12.5px; color:var(--chili); background:color-mix(in srgb, var(--chili) 13%, transparent); border:1px solid color-mix(in srgb, var(--chili) 35%, transparent); border-radius:8px; padding:6px 10px; margin-bottom:18px;}
+
+  .sec{margin-bottom:20px;}
+  .sec h3{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-dim); margin:0 0 9px; font-weight:600;}
+  .ingredients{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:5px;}
+  .ingredients li{font-size:14px; display:flex; justify-content:space-between; gap:10px; border-bottom:1px dotted var(--line); padding-bottom:5px;}
+  .ingredients li .qty{font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--ink-dim); white-space:nowrap;}
+
+  .steps{list-style:none; margin:0; padding:0; counter-reset:step; display:flex; flex-direction:column; gap:12px;}
+  .steps li{display:flex; gap:12px; font-size:14.5px; line-height:1.6;}
+  .steps li::before{counter-increment:step; content:counter(step); font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600; color:var(--card); background:var(--sea); width:22px; height:22px; border-radius:50%; flex:none; display:flex; align-items:center; justify-content:center; margin-top:1px;}
+
+  .tip-note{font-size:13px; color:var(--chili-dim); background:color-mix(in srgb, var(--chili) 10%, transparent); border:1px solid color-mix(in srgb, var(--chili) 28%, transparent); border-radius:8px; padding:9px 11px; margin-top:10px; line-height:1.55;}
+  .verdict{font-family:'Gaegu',cursive; font-size:17px; color:var(--sea); margin-top:4px;}
+
+  footer.foot{max-width:980px; margin:36px auto 0; padding:0 20px; color:var(--ink-dim); font-size:11.5px; font-family:'IBM Plex Mono',monospace;}
+  footer.foot a{color:var(--sea);}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="masthead">
+    <div class="eyebrow">Hojak Kitchen Notes</div>
+    <h1 class="disp">집밥 레시피 노트</h1>
+    <div class="sub">직접 바다에서 잡아온 한치·벤자리·오징어로 차린 집밥 기록. 재료, 순서, 터득한 팁까지 그대로.</div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+</div>
+
+<footer class="foot">HOJAK KITCHEN · 재료 대부분은 직접 출조해서 잡은 것들입니다</footer>
+
+<div class="scrim" id="scrim"></div>
+<div class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="panelTitle"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  var recipes = [
+    {
+      name: "시원한 참외한치냉국",
+      cat: "냉국",
+      date: "2026-07-31",
+      people: 3,
+      photo: "assets/chamoe-hanchi-naengguk.jpg",
+      caught: "한치",
+      teaser: "참외 + 한치 + 된장물 — 여름 더위 잡는 시원한 냉국",
+      ingredients: [
+        {n:"참외", q:"2개"}, {n:"식초", q:"2스푼 (한치 버전은 4스푼)"},
+        {n:"참깨", q:"2스푼"}, {n:"된장", q:"크게 2스푼"},
+        {n:"물", q:"2그릇"}, {n:"얼음", q:"적당량"}
+      ],
+      steps: [
+        "재료를 다 썰어넣고, 된장은 물에 미리 풀어서 넣는다.",
+        "얼음 양을 늘리면 그만큼 물 양을 줄여야 간이 맞는다."
+      ],
+      tip: null,
+      verdict: null
+    },
+    {
+      name: "내가잡은 오삼제육",
+      cat: "볶음류",
+      date: "2026-07-02",
+      people: 3,
+      photo: "assets/osam-jeyuk.jpg",
+      caught: "오징어발·한치발",
+      teaser: "제육볶음에 직접 잡은 오징어발을 더한 버전",
+      ingredients: [
+        {n:"돼지고기(제육용)", q:"500g"}, {n:"오징어발", q:"고기만큼"},
+        {n:"양파", q:"2개"}, {n:"물", q:"200ml"},
+        {n:"고추장", q:"1큰술"}, {n:"고추가루", q:"약간"},
+        {n:"식용유", q:"약간"}, {n:"마늘", q:"1큰술"}, {n:"다시다", q:"조금"}
+      ],
+      steps: [
+        "양념+물에 고기를 먼저 볶아 익힌다.",
+        "양파를 썰어 넣고(고추도 넣으면 좋음) 반쯤 익힌다.",
+        "오징어발을 넣고 살짝 익혀 마무리한다.",
+        "참기름 + 참깨를 뿌려 마무리."
+      ],
+      tip: null,
+      verdict: null
+    },
+    {
+      name: "벤자리국",
+      cat: "생선국",
+      date: "2026-08-02",
+      people: 2,
+      photo: "assets/benjari-guk.jpg",
+      caught: "벤자리",
+      teaser: "벤자리 + 미역 된장국, 맑고 구수한 국물",
+      ingredients: [
+        {n:"벤자리", q:"2마리"}, {n:"생미역", q:"한주먹"},
+        {n:"된장", q:"1티스푼"}, {n:"간마늘", q:"조금"},
+        {n:"소금", q:"1티스푼"}, {n:"다시다", q:"2티스푼"}
+      ],
+      steps: [
+        "된장을 넣고 물 1.2L를 팔팔 끓인다.",
+        "벤자리를 넣고 중불에서 익을 때까지 끓인다.",
+        "소금과 다시다를 넣는다.",
+        "미역을 마지막에 넣고 간마늘을 조금 넣는다."
+      ],
+      tip: null,
+      verdict: "캬 좋음."
+    },
+    {
+      name: "한치회초무침",
+      cat: "초무침류",
+      date: "2026-08-02",
+      people: 3,
+      photo: "assets/hanchi-chomuchim.jpg",
+      caught: "한치",
+      teaser: "한치 + 배 + 매콤새콤 양념 초무침",
+      ingredients: [
+        {n:"한치", q:"3마리"}, {n:"배", q:"1개"}, {n:"양파", q:"반쪽"},
+        {n:"깻잎/미나리/쑥갓", q:"계절에 따라 선택"},
+        {n:"고추장", q:"1스푼"}, {n:"고추가루", q:"1스푼"},
+        {n:"식초", q:"5스푼"}, {n:"다시다", q:"2티스푼"}, {n:"참기름·참깨", q:"약간"}
+      ],
+      steps: [
+        "양념을 따로 잘 섞어 만든다.",
+        "배는 채썰고 나머지 재료는 먹기 좋은 크기로 자른다.",
+        "양념을 버무릴 때 손 대신 숟가락 2개를 사용한다."
+      ],
+      tip: "버무릴 땐 손 말고 숟가락 2개를 쓰면 물이 고이지 않는다 — 터득한 팁.",
+      verdict: null
+    }
+  ];
+
+  var grid = document.getElementById('grid');
+  grid.innerHTML = recipes.map(function(r, i){
+    return '<button class="card" data-idx="'+i+'">'+
+      '<img class="photo" src="'+r.photo+'" alt="'+r.name+'" loading="lazy">'+
+      '<div class="body">'+
+        '<div class="top"><span class="name">'+r.name+'</span><span class="cat">'+r.cat+'</span></div>'+
+        '<div class="teaser">'+r.teaser+'</div>'+
+        '<div class="meta"><span class="num">'+r.date+'</span><span class="caught">🎣 '+r.caught+'</span></div>'+
+      '</div>'+
+    '</button>';
+  }).join('');
+
+  var scrim = document.getElementById('scrim');
+  var panel = document.getElementById('panel');
+
+  function renderPanel(idx){
+    var r = recipes[idx];
+    var html = '<img class="panel-photo" src="'+r.photo+'" alt="'+r.name+'">';
+    html += '<div class="panel-head"><div><div class="pd-cat">'+r.cat+' · '+r.date+'</div>'+
+      '<h2 id="panelTitle" class="disp">'+r.name+'</h2></div>'+
+      '<button class="panel-close" id="panelClose" aria-label="닫기">✕</button></div>';
+    html += '<div class="panel-body">';
+    html += '<div class="meta-row"><span>인원 <b>'+r.people+'</b></span><span>재료로 쓴 어획 <b>'+r.caught+'</b></span></div>';
+    html += '<div class="caught-badge">🎣 직접 잡은 '+r.caught+'로 만든 레시피</div>';
+
+    html += '<div class="sec"><h3>재료</h3><ul class="ingredients">';
+    r.ingredients.forEach(function(ing){
+      html += '<li><span>'+ing.n+'</span><span class="qty">'+ing.q+'</span></li>';
+    });
+    html += '</ul></div>';
+
+    html += '<div class="sec"><h3>조리 순서</h3><ol class="steps">';
+    r.steps.forEach(function(s){ html += '<li>'+s+'</li>'; });
+    html += '</ol>';
+    if(r.tip) html += '<div class="tip-note">💡 '+r.tip+'</div>';
+    html += '</div>';
+
+    if(r.verdict){
+      html += '<div class="sec"><h3>맛 평가</h3><div class="verdict">"'+r.verdict+'"</div></div>';
+    }
+
+    html += '</div>';
+    panel.innerHTML = html;
+    document.getElementById('panelClose').addEventListener('click', closePanel);
+  }
+
+  function openPanel(idx){
+    renderPanel(idx);
+    scrim.classList.add('open');
+    panel.classList.add('open');
+    document.addEventListener('keydown', onKey);
+  }
+  function closePanel(){
+    scrim.classList.remove('open');
+    panel.classList.remove('open');
+    document.removeEventListener('keydown', onKey);
+  }
+  function onKey(e){ if(e.key==='Escape') closePanel(); }
+  scrim.addEventListener('click', closePanel);
+
+  grid.addEventListener('click', function(e){
+    var card = e.target.closest('.card');
+    if(!card) return;
+    openPanel(parseInt(card.getAttribute('data-idx'),10));
+  });
+})();
+</script>
+</body>
+</html>
