@@ -105,6 +105,8 @@
 
   .tip-note{font-size:13px; color:var(--chili-dim); background:color-mix(in srgb, var(--chili) 10%, transparent); border:1px solid color-mix(in srgb, var(--chili) 28%, transparent); border-radius:8px; padding:9px 11px; margin-top:10px; line-height:1.55;}
   .verdict{font-family:'Gaegu',cursive; font-size:17px; color:var(--sea); margin-top:4px;}
+  .video-link{display:inline-flex; align-items:center; gap:6px; font-size:13.5px; color:var(--sea); text-decoration:none; border:1px solid var(--line); border-radius:8px; padding:8px 11px;}
+  .video-link:hover{border-color:var(--sea); background:color-mix(in srgb, var(--sea) 10%, transparent);}
 
   footer.foot{max-width:980px; margin:36px auto 0; padding:0 20px; color:var(--ink-dim); font-size:11.5px; font-family:'IBM Plex Mono',monospace;}
   footer.foot a{color:var(--sea);}
@@ -240,7 +242,8 @@
         "올리브유 2스푼을 넣고 불을 끈 후 살짝 저어 그릇에 담는다."
       ],
       tip: "갑오징어 간을 따로 조리하지 않고 면수에 바로 풀어 녹이면 감칠맛이 더해진다.",
-      verdict: null
+      verdict: null,
+      video: {url:"https://youtu.be/iV021PiMLVs", label:"갑오징어 손질과 요리법 참고 영상"}
     }
   ];
 
@@ -283,6 +286,10 @@
 
     if(r.verdict){
       html += '<div class="sec"><h3>맛 평가</h3><div class="verdict">"'+r.verdict+'"</div></div>';
+    }
+
+    if(r.video){
+      html += '<div class="sec"><h3>참고 영상</h3><a class="video-link" href="'+r.video.url+'" target="_blank" rel="noopener">▶ '+r.video.label+'</a></div>';
     }
 
     html += '</div>';
