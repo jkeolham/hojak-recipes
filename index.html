@@ -218,6 +218,29 @@
       ],
       tip: "버무릴 땐 손 말고 숟가락 2개를 쓰면 물이 고이지 않는다 — 터득한 팁.",
       verdict: null
+    },
+    {
+      name: "갑오징어 해물 짜파게티",
+      cat: "면류",
+      date: "2026-10-30",
+      people: null,
+      photo: "assets/gapojingeo-jjapagetti.jpg",
+      caught: "갑오징어",
+      teaser: "쪄둔 갑오징어 발·간을 면수에 녹여 끓이는 해물 짜파게티",
+      ingredients: [
+        {n:"짜파게티(또는 굵은 오뚜기 사리면+짜파게티 소스)", q:"1~2개"},
+        {n:"갑오징어 발+간(붙은 상태로 찐 것, 압력솥 10분 또는 일반 25분)", q:"5마리 분량"},
+        {n:"고추", q:"5개"}, {n:"대파", q:"한 뼘"},
+        {n:"불닭소스", q:"반스푼"}, {n:"올리브유", q:"2스푼"}
+      ],
+      steps: [
+        "끓는 물에 면을 4분간 끓인다. 중간에 갑오징어 발을 넣어 간이 자연스럽게 녹아 퍼지게 한다.",
+        "물을 5스푼 정도만 남기고 버린 후 짜장 양념과 썬 대파·고추를 넣고 볶는다.",
+        "면의 꼬들기가 사라져 마무리될 즈음 불닭소스 반스푼을 넣고 10초간 볶는다.",
+        "올리브유 2스푼을 넣고 불을 끈 후 살짝 저어 그릇에 담는다."
+      ],
+      tip: "갑오징어 간을 따로 조리하지 않고 면수에 바로 풀어 녹이면 감칠맛이 더해진다.",
+      verdict: null
     }
   ];
 
@@ -243,7 +266,7 @@
       '<h2 id="panelTitle" class="disp">'+r.name+'</h2></div>'+
       '<button class="panel-close" id="panelClose" aria-label="닫기">✕</button></div>';
     html += '<div class="panel-body">';
-    html += '<div class="meta-row"><span>인원 <b>'+r.people+'</b></span><span>재료로 쓴 어획 <b>'+r.caught+'</b></span></div>';
+    html += '<div class="meta-row">'+(r.people?'<span>인원 <b>'+r.people+'</b></span>':'')+'<span>재료로 쓴 어획 <b>'+r.caught+'</b></span></div>';
     html += '<div class="caught-badge">🎣 직접 잡은 '+r.caught+'로 만든 레시피</div>';
 
     html += '<div class="sec"><h3>재료</h3><ul class="ingredients">';
